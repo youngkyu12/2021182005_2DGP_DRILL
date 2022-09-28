@@ -22,7 +22,7 @@ def animation(action):
         get_events()
 
 while True:
-    for action in range(action_all, 0, -1):
+    for action in range(action_all, -1, -1):
         animation(action)
     break
 
