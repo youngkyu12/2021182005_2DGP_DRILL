@@ -1,4 +1,9 @@
 from pico2d import *
+import os
+
+path = os.getcwd() + "\Resource"
+os.chdir(path)
+
 
 Width, Height = 1280, 720
 bg_Width, bg_Height = 1024, 600
