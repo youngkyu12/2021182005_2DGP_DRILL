@@ -6,7 +6,7 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
-    (SDL_KEYUP, SDLK_LEFT): LEFT_UP
+    (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
 }
 
 
@@ -31,9 +31,9 @@ class IdleState:
 
     def draw(character):
         if character.dir == 1:
-            character.image.clip_draw(character.frame * 82, 100, 82, 100, character.x, character.y)
+            character.image.clip_draw(character.frame * 82, 300, 82, 94, character.x, character.y)
         else:
-            character.image.clip_draw(character.frame * 82, 0, 82, 100, character.x, character.y)
+            character.image.clip_draw(character.frame * 82, 200, 82, 94, character.x, character.y)
 
 
 class RunState:
@@ -54,21 +54,20 @@ class RunState:
     def do(character):
         character.frame = (character.frame + 1) % 5
         character.timer -= 1
-        character.x += character.velocity * 10
+        character.x += character.velocity * 5
 
     def draw(character):
         if character.velocity == 1:
-            character.image.clip_draw(character.frame * 82, 200, 82, 100, character.x, character.y)
+            character.image.clip_draw(character.frame * 82, 400, 82, 94, character.x, character.y)
         else:
-            character.image.clip_draw(character.frame * 82, 300, 82, 100, character.x, character.y)
-        delay(0.01)
+            character.image.clip_draw(character.frame * 82, 500, 82, 94, character.x, character.y)
 
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState,
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
-               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState}
+               LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState},
 }
 
 class Character:

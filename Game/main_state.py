@@ -66,7 +66,6 @@ def draw():
     background.draw()
     character.draw()
     update_canvas()
-    delay(0.05)
 
 
 
