@@ -52,8 +52,8 @@ class Character:
             Character.image = load_image("character_anime.png")
 
     def update(self):
-        self.x += self.dir_x * 2
-        self.y += self.dir_y * 2
+        self.x += self.dir_x * 5
+        self.y += self.dir_y * 5
         if self.animation == 4 or self.animation == 5:
             self.frame = (self.frame + 1) % 5
         else:
@@ -68,8 +68,32 @@ class Character:
                 character.animation = 4
 
 
+
     def draw(self):
         Character.image.clip_draw(self.frame * 82, self.animation * 100, 82, 96, self.x, self.y)
+
+class Object:
+    def __init__(self):
+        self.image = load_image('target_1_32x32.png')
+        self.x = Width // 2
+        self.y = Height // 2
+        self.t = 0
+        self.x2, self.y2 = 1280 - 128 - 512 - 256, 720 - 600 + 150
+        self.x3, self.y3 = 1280 - 1024 - 128, 720 - 600 + 100
+        self.i = 0
+        self.throw = False
+
+    def update(self):
+        self.t = self.i / 100
+        self.x = (2 * self.t ** 2 - 3 * self.t + 1) * character.x + (-4 * self.t ** 2 + 4 * self.t) * self.x2 + (2 * self.t ** 2 - self.t) * self.x3
+        self.y = (2 * self.t ** 2 - 3 * self.t + 1) * character.y + (-4 * self.t ** 2 + 4 * self.t) * self.y2 + (2 * self.t ** 2 - self.t) * self.y3
+        self.i += 4
+        if self.i > 100:
+            self.i = 0
+            self.throw = False
+
+    def draw(self):
+        self.image.draw(self.x, self. y)
 
 
 def handle_events():
@@ -92,6 +116,8 @@ def handle_events():
                 elif character.animation == 4 or character.animation == 3:
                     character.animation = 1
                 character.dir_y += 1
+            elif event.key == SDLK_SPACE:
+                object.throw = True
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
                 character.dir_x += 1
@@ -104,27 +130,32 @@ def handle_events():
 Back = None
 character = None
 running = None
-
+object = None
 def enter():
-    global Back, running, character
+    global Back, running, character, object
     Back = Background()
     character = Character()
+    object = Object()
     running = True
 
 def exit():
-    global Back, running, character
+    global Back, running, character, object
     del Back
     del character
+    del object
     running = False
 
 def update():
     character.update()
-
+    if object.throw == True:
+       object.update()
 
 def draw():
     clear_canvas()
     Back.draw()
     character.draw()
+    if object.throw == True:
+        object.draw()
     update_canvas()
 
 open_canvas(Width, Height)
