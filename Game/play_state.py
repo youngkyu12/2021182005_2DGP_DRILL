@@ -62,13 +62,10 @@ class Character:
             self.dir_y -= 1
         elif self.y < 720 - 600 + 48:
             self.dir_y = 0
-            if character.animation == 0:
-                character.animation = 5
-            elif character.animation == 1:
-                character.animation = 4
-
-
-
+            if self.animation == 0:
+                self.animation = 5
+            elif self.animation == 1:
+                self.animation = 4
     def draw(self):
         Character.image.clip_draw(self.frame * 82, self.animation * 100, 82, 96, self.x, self.y)
 
@@ -115,9 +112,10 @@ def handle_events():
                     character.animation = 0
                 elif character.animation == 4 or character.animation == 3:
                     character.animation = 1
-                character.dir_y += 1
+                if character.dir_y == 0:
+                    character.dir_y += 1
             elif event.key == SDLK_SPACE:
-                object.throw = True
+                    object.throw = True
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
                 character.dir_x += 1
