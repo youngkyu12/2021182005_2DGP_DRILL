@@ -66,6 +66,11 @@ class Character:
                 self.animation = 5
             elif self.animation == 1:
                 self.animation = 4
+        if self.x < 1280 - 1024 - 128:
+            self.x -= self.dir_x * 5
+        elif self.x > 1280 - 128:
+            self.x -= self.dir_x * 5
+
     def draw(self):
         Character.image.clip_draw(self.frame * 82, self.animation * 100, 82, 96, self.x, self.y)
 
@@ -75,19 +80,26 @@ class Object:
         self.x = Width // 2
         self.y = Height // 2
         self.t = 0
-        self.x2, self.y2 = 1280 - 128 - 512 - 256, 720 - 600 + 150
-        self.x3, self.y3 = 1280 - 1024 - 128, 720 - 600 + 100
+        self.xl, self.yl = 1280 - 1024 - 128, 720 - 600 + 100
+        self.xr, self.yr = 1280 - 128, 720 - 600 + 100
         self.i = 0
-        self.throw = False
+        self.throw_r = False
+        self.throw_l = False
 
     def update(self):
         self.t = self.i / 100
-        self.x = (2 * self.t ** 2 - 3 * self.t + 1) * character.x + (-4 * self.t ** 2 + 4 * self.t) * self.x2 + (2 * self.t ** 2 - self.t) * self.x3
-        self.y = (2 * self.t ** 2 - 3 * self.t + 1) * character.y + (-4 * self.t ** 2 + 4 * self.t) * self.y2 + (2 * self.t ** 2 - self.t) * self.y3
+        if self.throw_l == True:
+            self.x = (2 * self.t ** 2 - 3 * self.t + 1) * character.x + (-4 * self.t ** 2 + 4 * self.t) * (character.x -((character.x - self.xl) // 2)) + (2 * self.t ** 2 - self.t) * self.xl
+            self.y = (2 * self.t ** 2 - 3 * self.t + 1) * character.y + (-4 * self.t ** 2 + 4 * self.t) * (character.y + 100) + (2 * self.t ** 2 - self.t) * self.yl
+        elif self.throw_r == True:
+            self.x = (2 * self.t ** 2 - 3 * self.t + 1) * character.x + (-4 * self.t ** 2 + 4 * self.t) * (character.x + ((self.xr - character.x) // 2)) + (2 * self.t ** 2 - self.t) * self.xr
+            self.y = (2 * self.t ** 2 - 3 * self.t + 1) * character.y + (-4 * self.t ** 2 + 4 * self.t) * (character.y + 100) + (2 * self.t ** 2 - self.t) * self.yr
+
         self.i += 4
         if self.i > 100:
             self.i = 0
-            self.throw = False
+            self.throw_r = False
+            self.throw_l = False
 
     def draw(self):
         self.image.draw(self.x, self. y)
@@ -115,7 +127,10 @@ def handle_events():
                 if character.dir_y == 0:
                     character.dir_y += 1
             elif event.key == SDLK_SPACE:
-                    object.throw = True
+                if character.animation == 5 or character.animation == 2:
+                    object.throw_l = True
+                elif character.animation == 4 or character.animation == 3:
+                    object.throw_r = True
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
                 character.dir_x += 1
@@ -145,14 +160,14 @@ def exit():
 
 def update():
     character.update()
-    if object.throw == True:
+    if object.throw_r == True or object.throw_l == True:
        object.update()
 
 def draw():
     clear_canvas()
     Back.draw()
     character.draw()
-    if object.throw == True:
+    if object.throw_r == True or object.throw_l == True:
         object.draw()
     update_canvas()
 
