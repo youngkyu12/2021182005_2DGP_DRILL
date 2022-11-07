@@ -2,14 +2,15 @@ from pico2d import *
 import game_framework
 import game_world
 
-from grass import Grass
-from grass1 import Grass1
+from grass_back import Grass_Back
+from grass_front import Grass_Front
 from boy import Boy
 
 
 boy = None  # boy의 event를 전달하기 위해 남겨둔다.
-grass = None
+grass_back = None
 ball = None
+grass_front = None
 
 def handle_events():
     events = get_events()
@@ -24,13 +25,13 @@ def handle_events():
 
 # 초기화
 def enter():
-    global boy, grass, grass1
+    global boy, grass_back, grass_front
     boy = Boy()
-    grass = Grass()
-    grass1 = Grass1()
+    grass_back = Grass_Back()
+    grass_front = Grass_Front()
     game_world.add_object(boy, 1)
-    game_world.add_object(grass, 0)
-    game_world.add_object(grass1, 2)
+    game_world.add_object(grass_back, 0)
+    game_world.add_object(grass_front, 2)
 
 # 종료
 def exit():
